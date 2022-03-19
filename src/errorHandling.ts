@@ -9,6 +9,7 @@ const errorHandling = async (
   if (err instanceof UserAlreadyExistsError) {
     res.status(400).send({ error: err.message })
   } else {
+    console.log(err)
     res.status(400).send({ error: 'Some error' })
   }
 }
