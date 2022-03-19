@@ -34,6 +34,8 @@ class UserController {
     } catch (error) {
       if (error.code === 11000) {
         next(new UserAlreadyExistsError())
+      } else {
+        next(error)
       }
     }
   }
