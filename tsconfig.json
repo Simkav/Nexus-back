@@ -1,6 +1,10 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "outDir": "build"
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "outDir": "build",
+    "strict": true,
+    "useUnknownInCatchVariables": false
   }
 }
