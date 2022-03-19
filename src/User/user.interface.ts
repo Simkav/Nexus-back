@@ -1,9 +1,16 @@
+import { Model } from 'mongoose'
 import { Expose } from 'class-transformer'
 import { IsDefined, IsEmail } from 'class-validator'
 interface IUser {
   email: string
   password: string
 }
+
+interface InstanceMethods {
+  checkPassword: (password: string) => Promise<boolean>
+}
+
+interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
 
 class CreateUserDto implements IUser {
   @Expose()
@@ -15,4 +22,4 @@ class CreateUserDto implements IUser {
   password: string
 }
 
-export { CreateUserDto, IUser }
+export { CreateUserDto, IUser, InstanceMethods, IUserModel }
