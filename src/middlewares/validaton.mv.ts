@@ -2,15 +2,15 @@ import { NextFunction, Request, Response } from 'express'
 import { validate } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
 
-const validationMw = (dtoClass: any) => {
-  return function (req: Request, res: Response, next: NextFunction) {
+const validationMw = (dtoClass: any) =>
+  function (req: Request, res: Response, next: NextFunction) {
     const output: any = plainToInstance(dtoClass, req.body)
     validate(output, { skipMissingProperties: true }).then(errors => {
-      if (errors.length > 0) {
+      if (errors.length) {
         console.log(errors)
-        let errorTexts = Array()
-        for (const errorItem of errors) {
-          errorTexts = errorTexts.concat(errorItem.constraints)
+        const errorTexts = new Array()
+        for (const { constraints } of errors) {
+          errorTexts.push(constraints)
         }
         res.status(400).send(errorTexts)
         return
@@ -19,6 +19,5 @@ const validationMw = (dtoClass: any) => {
       }
     })
   }
-}
 
 export default validationMw

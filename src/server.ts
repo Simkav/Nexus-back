@@ -1,10 +1,10 @@
 import express from 'express'
 import errorHandling from './errorHandling'
-import { UserRouter } from './User/user.controller'
+import Router from './router'
 const server = express()
 server.use(express.json())
 
-server.use('/user', UserRouter)
+server.use(Router)
 
 server.use(errorHandling)
 

@@ -26,4 +26,4 @@ UserSchema.method('checkPassword', async function (password: string) {
 
 const UserModel = model<IUser, IUserModel>('User', UserSchema)
 
-export { UserSchema, UserModel }
+export { UserModel }
