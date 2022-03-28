@@ -1,3 +1,5 @@
+import UserAlreadyExistsError from './errors/userAlreadyExists'
+import UserNotFound from './errors/userNotFound'
 import { CreateUserDto, IUserModel } from './user.interface'
 import { UserModel } from './user.model'
 export default class UserService {
@@ -6,15 +8,37 @@ export default class UserService {
     this.model = UserModel
   }
   createUser = async (userCreateDto: CreateUserDto) => {
-    const createdUser = await this.model.create(userCreateDto)
-    return createdUser
+    try {
+      const createdUser = await this.model.create(userCreateDto)
+      return createdUser
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new UserAlreadyExistsError()
+      } else {
+        throw error
+      }
+    }
   }
   findUserById = async (id: string) => {
-    const findedUser = await this.model.findById(id)
-    return findedUser
+    try {
+      const findedUser = await this.model.findById(id)
+      if (!findedUser) {
+        throw new UserNotFound()
+      }
+      return findedUser
+    } catch (error) {
+      throw error
+    }
   }
   findUserByEmail = async (email: string) => {
-    const findedUser = await this.model.findOne({ email })
-    return findedUser
+    try {
+      const findedUser = await this.model.findOne({ email })
+      if (!findedUser) {
+        throw new UserNotFound()
+      }
+      return findedUser
+    } catch (error) {
+      throw error
+    }
   }
 }
