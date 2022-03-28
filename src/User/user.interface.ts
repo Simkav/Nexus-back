@@ -22,4 +22,12 @@ class CreateUserDto implements IUser {
   password: string
 }
 
-export { CreateUserDto, IUser, IInstanceMethods, IUserModel }
+class CredentialsUserDto extends CreateUserDto {}
+
+export {
+  CreateUserDto,
+  IUser,
+  IInstanceMethods,
+  IUserModel,
+  CredentialsUserDto
+}
