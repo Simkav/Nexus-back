@@ -1,7 +1,7 @@
-import { CreateUserDto } from './user.interface'
+import { CreateUserDto, IUserModel } from './user.interface'
 import { UserModel } from './user.model'
-export default class UserSerivce {
-  model: typeof UserModel
+export default class UserService {
+  model: IUserModel
   constructor () {
     this.model = UserModel
   }

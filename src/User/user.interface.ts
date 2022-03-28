@@ -6,11 +6,11 @@ interface IUser {
   password: string
 }
 
-interface InstanceMethods {
+interface IInstanceMethods {
   checkPassword: (password: string) => Promise<boolean>
 }
 
-interface IUserModel extends Model<IUser, {}, InstanceMethods> {}
+interface IUserModel extends Model<IUser, {}, IInstanceMethods> {}
 
 class CreateUserDto implements IUser {
   @Expose()
@@ -22,4 +22,4 @@ class CreateUserDto implements IUser {
   password: string
 }
 
-export { CreateUserDto, IUser, InstanceMethods, IUserModel }
+export { CreateUserDto, IUser, IInstanceMethods, IUserModel }
