@@ -1,8 +1,7 @@
 import dotenv from 'dotenv'
+dotenv.config()
 import mongooseInit from './mongoose'
 import server from './server'
-
-dotenv.config()
 
 const PORT = process.env.PORT || 3000
 
