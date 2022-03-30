@@ -10,8 +10,8 @@ class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body
-      const findedUser = await this.authService.login(email, password)
-      res.send({ user: findedUser })
+      const token = await this.authService.login(email, password)
+      res.send({ token })
     } catch (error) {
       next(error)
     }
@@ -19,9 +19,10 @@ class AuthController {
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body
-      const user = await this.authService.register({ email, password })
-      res.send({ user })
+      const token = await this.authService.register({ email, password })
+      res.send({ token })
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
