@@ -1,15 +1,16 @@
 import { isEmail } from 'class-validator'
 import { Schema, model } from 'mongoose'
-import { IUser, IUserModel } from './user.interface'
+import { IUserDocument } from './user.interface'
 import { hash, compare } from 'bcrypt'
 
-const UserSchema = new Schema<IUser, IUserModel>({
+const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
     unique: true,
     validate: [isEmail, 'Invalid email']
   },
+  books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
   password: { type: String, required: true }
 })
 
@@ -24,6 +25,6 @@ UserSchema.method('checkPassword', async function (password: string) {
   return await compare(password, this.password)
 })
 
-const UserModel = model<IUser, IUserModel>('User', UserSchema)
+const UserModel = model<IUserDocument>('User', UserSchema)
 
 export { UserModel }

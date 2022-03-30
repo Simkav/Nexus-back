@@ -1,18 +1,20 @@
-import { Model } from 'mongoose'
+import { Model, Types, Document } from 'mongoose'
 import { Expose } from 'class-transformer'
 import { IsDefined, IsEmail } from 'class-validator'
+import { IBookDocument } from '../Book/book.interface'
 interface IUser {
   email: string
   password: string
+  books: IBookDocument[]
 }
 
-interface IInstanceMethods {
+interface IUserDocument extends IUser, Document {
   checkPassword: (password: string) => Promise<boolean>
 }
 
-interface IUserModel extends Model<IUser, {}, IInstanceMethods> {}
+interface IUserModel extends Model<IUserDocument> {}
 
-class CreateUserDto implements IUser {
+class CreateUserDto implements Omit<IUser, 'books'> {
   @Expose()
   @IsDefined()
   @IsEmail()
@@ -24,10 +26,4 @@ class CreateUserDto implements IUser {
 
 class CredentialsUserDto extends CreateUserDto {}
 
-export {
-  CreateUserDto,
-  IUser,
-  IInstanceMethods,
-  IUserModel,
-  CredentialsUserDto
-}
+export { CreateUserDto, IUser, IUserModel, IUserDocument, CredentialsUserDto }
