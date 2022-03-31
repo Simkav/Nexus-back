@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express'
 import JwtService from '../Jwt/jwt.service'
 const jwtService = new JwtService()
 // TODO create errors
-const parseAuth = async (req: Request, res: Response, next: NextFunction) => {
+const parseJwt = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   if (!authHeader) {
     throw new Error('No authorization header')
@@ -23,4 +23,4 @@ const parseAuth = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default parseAuth
+export default parseJwt
