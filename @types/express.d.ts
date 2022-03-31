@@ -4,3 +4,5 @@ declare module Express {
     jwtPayload: any
   }
 }
+
+export {}
