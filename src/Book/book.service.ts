@@ -49,15 +49,21 @@ export default class BookService {
       await this.model.findByIdAndDelete(id)
       user.books = books
       await user.save()
-      return user
+      return true
     } catch (error) {
       throw error
     }
   }
   addCommentToBook = async (book: IBookDocument, comment: string) => {
     try {
-      await book.addComment(comment)
-      return book
+      return await book.addComment(comment)
+    } catch (error) {
+      throw error
+    }
+  }
+  removeCommentFromBookById = async (book: IBookDocument, id: string) => {
+    try {
+      return await book.deleteComment(id)
     } catch (error) {
       throw error
     }
