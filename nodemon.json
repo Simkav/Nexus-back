@@ -3,5 +3,5 @@
   "watch": ["src/**/*.ts", ".env"],
   "ext": "ts,js,.env",
   "verbose": false,
-  "exec": "ts-node src/index.ts"
+  "exec": "ts-node --files src/index.ts"
 }

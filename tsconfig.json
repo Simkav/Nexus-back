@@ -5,7 +5,8 @@
     "strictPropertyInitialization": false,
     "outDir": "build",
     "strict": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "typeRoots": ["@types"]
   },
   "exclude": ["node_modules", "build", "**/*spec.ts"]
 }
