@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken'
 export default class JwtService {
   private secret: string
   constructor () {
-    //   TOOD fix this
-    this.secret = process.env.JWT_SECRET || ''
+    this.secret = process.env.JWT_SECRET
   }
   //   TOOD async methods
   sign = (payload: any) => {
