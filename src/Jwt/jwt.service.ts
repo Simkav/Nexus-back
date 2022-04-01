@@ -10,7 +10,6 @@ export default class JwtService {
     return jwt.sign(payload, this.secret)
   }
   verify = (token: string) => {
-    console.log(process.env.JWT_SECRET)
     return jwt.verify(token, this.secret)
   }
 }
