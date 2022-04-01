@@ -1,29 +1,34 @@
-import { IsDefined } from 'class-validator'
+import { IsDefined, IsString } from 'class-validator'
 import { Expose } from 'class-transformer'
 import { Types, Document, Model } from 'mongoose'
 
-interface IBook {
+export interface IBook {
   title: string
   owner: Types.ObjectId
   comments: IBookComment[]
 }
 
-class CreateBookDto implements Omit<IBook, 'comments' | 'owner'> {
+export class CreateBookDto implements Omit<IBook, 'comments' | 'owner'> {
   @Expose()
   @IsDefined()
   title: string
 }
 
-interface IBookDocument extends IBook, Document {
+export class AddCommentDto {
+  @Expose()
+  @IsDefined()
+  @IsString()
+  comment: string
+}
+
+export interface IBookDocument extends IBook, Document {
   addComment: (comment: string) => Promise<boolean>
   deleteComment: (commentId: string) => Promise<boolean>
 }
 
-interface IBookModel extends Model<IBookDocument> {}
+export interface IBookModel extends Model<IBookDocument> {}
 
-interface IBookComment {
+export interface IBookComment {
   text: string
   _id: Types.ObjectId
 }
-
-export { IBook, IBookComment, IBookDocument, IBookModel, CreateBookDto }
