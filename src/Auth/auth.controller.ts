@@ -41,4 +41,4 @@ AuthRouter.post(
   authController.register
 )
 
-export { AuthRouter }
+export default AuthRouter
