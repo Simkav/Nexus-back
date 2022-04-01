@@ -1,8 +1,8 @@
-declare module Express {
-  interface Request {
-    // TODO add typing
-    jwtPayload: any
+declare global {
+  namespace Express {
+    interface Request {
+      jwtPayload: any
+    }
   }
 }
-
 export {}
