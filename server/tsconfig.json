@@ -6,7 +6,8 @@
     "outDir": "build",
     "strict": true,
     "useUnknownInCatchVariables": false,
-    "typeRoots": ["@types"]
+    "typeRoots": ["server/@types"],
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "build", "**/*spec.ts"]
 }
