@@ -4,7 +4,7 @@ import Router from './router'
 const server = express()
 server.use(express.json())
 
-server.use(Router)
+server.use('/api',Router)
 
 server.use(errorHandling)
 
