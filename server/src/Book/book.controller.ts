@@ -2,7 +2,7 @@ import { NextFunction, Response, Request, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import UserService from '../User/user.service'
-import { CreateBookDto, AddCommentDto } from './book.interface'
+import { CreateBookDto, AddCommentDto, UpdateBookDto } from './book.interface'
 import BookService from './book.service'
 
 class BookController {
@@ -29,6 +29,20 @@ class BookController {
       res.send({ book })
     } catch (error) {
       next(error)
+    }
+  }
+  updateBook = async (req: Request, res: Response, next: NextFunction) => {
+    const {
+      params: { bookId },
+      body
+    } = req
+    const user = await this.userService.findUserById(req.jwtPayload.userId)
+    if (user.books.some(book => book._id.toString() === bookId)) {
+      const book = await this.bookService.findBookById(bookId)
+      const result = await this.bookService.updateBook(book, body)
+      res.send({ success: result })
+    } else {
+      next(new Error('You are not allowed to remove comment from this book'))
     }
   }
   deleteBook = async (req: Request, res: Response, next: NextFunction) => {
@@ -99,15 +113,14 @@ class BookController {
 
 const BookRouter = Router()
 const bookController = new BookController()
-BookRouter.get('/', parseJwt, bookController.getBooks)
-BookRouter.get('/:bookId', parseJwt, bookController.getBookById)
-BookRouter.post(
-  '/',
-  validationMw(CreateBookDto),
-  parseJwt,
-  bookController.createBook
-)
-BookRouter.delete('/:bookId', parseJwt, bookController.deleteBook)
+BookRouter.route('/')
+  .get(parseJwt, bookController.getBooks)
+  .post(validationMw(CreateBookDto), parseJwt, bookController.createBook)
+BookRouter.route('/:bookId')
+  .all(parseJwt)
+  .get(bookController.getBookById)
+  .delete(bookController.deleteBook)
+  .patch(validationMw(UpdateBookDto), bookController.updateBook)
 BookRouter.post(
   '/:bookId/comment',
   validationMw(AddCommentDto),
