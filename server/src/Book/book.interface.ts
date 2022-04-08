@@ -13,6 +13,7 @@ export class CreateBookDto implements Omit<IBook, 'comments' | 'owner'> {
   @Expose()
   @IsDefined()
   title: string
+
   @Expose()
   description?: string
 }
@@ -23,6 +24,7 @@ export class UpdateBookDto
   title?: string
   @Expose()
   description?: string
+
 }
 
 export class AddCommentDto {
