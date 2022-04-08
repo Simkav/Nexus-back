@@ -3,6 +3,7 @@ import { IBookDocument } from './book.interface'
 
 const BookSchema = new Schema({
   title: { type: String, required: true },
+  description: { type: String, required: false, default: '' },
   owner: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   comments: [{ text: { type: String }, _id: { type: Schema.Types.ObjectId } }]
 })
