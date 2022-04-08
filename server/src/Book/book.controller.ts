@@ -99,15 +99,13 @@ class BookController {
 
 const BookRouter = Router()
 const bookController = new BookController()
-BookRouter.get('/', parseJwt, bookController.getBooks)
-BookRouter.get('/:bookId', parseJwt, bookController.getBookById)
-BookRouter.post(
-  '/',
-  validationMw(CreateBookDto),
-  parseJwt,
-  bookController.createBook
-)
-BookRouter.delete('/:bookId', parseJwt, bookController.deleteBook)
+BookRouter.route('/')
+  .get(parseJwt, bookController.getBooks)
+  .post(validationMw(CreateBookDto), parseJwt, bookController.createBook)
+BookRouter.route('/:bookId')
+  .all(parseJwt)
+  .get(bookController.getBookById)
+  .delete(bookController.deleteBook)
 BookRouter.post(
   '/:bookId/comment',
   validationMw(AddCommentDto),
