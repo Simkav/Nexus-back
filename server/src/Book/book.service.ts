@@ -1,6 +1,10 @@
-import { Types } from 'mongoose'
 import { IUserDocument } from '../User/user.interface'
-import { CreateBookDto, IBookDocument, IBookModel } from './book.interface'
+import {
+  CreateBookDto,
+  UpdateBookDto,
+  IBookDocument,
+  IBookModel
+} from './book.interface'
 import { BookModel } from './book.model'
 export default class BookService {
   private model: IBookModel
@@ -28,6 +32,14 @@ export default class BookService {
         throw new Error('Book not found')
       }
       return book
+    } catch (error) {
+      throw error
+    }
+  }
+  updateBook = async (book: IBookDocument, updateBookDto: UpdateBookDto) => {
+    try {
+      const { modifiedCount } = await book.update(updateBookDto)
+      return Boolean(modifiedCount)
     } catch (error) {
       throw error
     }
