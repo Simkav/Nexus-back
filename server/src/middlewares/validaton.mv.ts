@@ -8,13 +8,11 @@ const validationMw = (dtoClass: any) =>
       strategy: 'excludeAll'
     })
     validate(output, { skipMissingProperties: true }).then(errors => {
+      // TODO handling all errors
       if (errors.length) {
         console.log(errors)
-        const errorTexts = new Array()
-        for (const { constraints } of errors) {
-          errorTexts.push(constraints)
-        }
-        res.status(400).send(errorTexts)
+        const errorsToSend = errors.map(error => error.constraints)
+        res.status(400).send(errorsToSend)
         return
       } else {
         req.body = instanceToPlain(output, { strategy: 'excludeAll' })
