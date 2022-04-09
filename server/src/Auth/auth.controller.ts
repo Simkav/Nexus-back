@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express'
+import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import { CreateUserDto, CredentialsUserDto } from '../User/user.interface'
 import AuthService from './auth.service'
@@ -10,8 +11,8 @@ class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body
-      const token = await this.authService.login(email, password)
-      res.send({ token })
+      const result = await this.authService.login(email, password)
+      res.send(result)
     } catch (error) {
       next(error)
     }
@@ -19,10 +20,18 @@ class AuthController {
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body
-      const token = await this.authService.register({ email, password })
-      res.send({ token })
+      const result = await this.authService.register({ email, password })
+      res.send(result)
     } catch (error) {
       console.log(error)
+      next(error)
+    }
+  }
+  getInfo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.authService.getInfo(req.jwtPayload.userId)
+      res.send(result)
+    } catch (error) {
       next(error)
     }
   }
@@ -30,6 +39,7 @@ class AuthController {
 
 const AuthRouter = Router()
 const authController = new AuthController()
+AuthRouter.get('/me', parseJwt, authController.getInfo)
 AuthRouter.post(
   '/login',
   validationMw(CredentialsUserDto),
