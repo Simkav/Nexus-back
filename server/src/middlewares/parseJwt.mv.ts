@@ -16,6 +16,10 @@ const parseJwt = async (req: Request, res: Response, next: NextFunction) => {
       throw new Error('Schema must be a bearer')
     }
     const payload = jwtService.verify(token)
+    if (typeof payload === 'string') {
+       next(new Error())
+       return
+    }
     req.jwtPayload = payload
     next()
   } catch (error) {
