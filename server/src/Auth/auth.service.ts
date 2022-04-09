@@ -12,11 +12,13 @@ export default class AuthService {
   login = async (email: string, password: string) => {
     try {
       const findedUser = await this.userService.findUserByEmail(email)
+      console.log(findedUser)
       const isPasswordValid = await findedUser.checkPassword(password)
       if (!isPasswordValid) {
         throw new WrongCredentialsError()
       }
-      return this.jwtService.sign({ userId: findedUser._id })
+      const { password: _, ...user } = findedUser.toObject()
+      return { user, token: this.jwtService.sign({ userId: findedUser._id }) }
     } catch (error) {
       throw error
     }
@@ -24,7 +26,17 @@ export default class AuthService {
   register = async (createUserDto: CreateUserDto) => {
     try {
       const createdUser = await this.userService.createUser(createUserDto)
-      return this.jwtService.sign({ userId: createdUser._id })
+      const { password, ...user } = createdUser.toObject()
+      return { user, token: this.jwtService.sign({ userId: createdUser._id }) }
+    } catch (error) {
+      throw error
+    }
+  }
+  getInfo = async (userId: string) => {
+    try {
+      const findedUser = await this.userService.findUserById(userId)
+      const { password, ...user } = findedUser.toObject()
+      return user
     } catch (error) {
       throw error
     }
