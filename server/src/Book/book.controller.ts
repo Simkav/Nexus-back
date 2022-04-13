@@ -37,13 +37,10 @@ class BookController {
       body
     } = req
     const user = await this.userService.findUserById(req.jwtPayload.userId)
-    if (user.books.some(book => book._id.toString() === bookId)) {
-      const book = await this.bookService.findBookById(bookId)
-      const result = await this.bookService.updateBook(book, body)
-      res.send({ success: result })
-    } else {
-      next(new Error('You are not allowed to remove comment from this book'))
-    }
+    const book = await this.bookService.findBookById(bookId)
+    this.bookService.isBookBelongsToUser(book, user)
+    const result = await this.bookService.updateBook(book, body)
+    res.send({ success: result })
   }
   deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -64,16 +61,13 @@ class BookController {
     try {
       const { bookId, commentId } = req.params
       const user = await this.userService.findUserById(req.jwtPayload.userId)
-      if (user.books.some(book => book._id.toString() === bookId)) {
-        const book = await this.bookService.findBookById(bookId)
-        const result = await this.bookService.removeCommentFromBookById(
-          book,
-          commentId
-        )
-        res.send({ success: result })
-      } else {
-        next(new Error('You are not allowed to remove comment from this book'))
-      }
+      const book = await this.bookService.findBookById(bookId)
+      this.bookService.isBookBelongsToUser(book, user)
+      const result = await this.bookService.removeCommentFromBookById(
+        book,
+        commentId
+      )
+      res.send({ success: result })
     } catch (error) {
       next(error)
     }
@@ -89,13 +83,10 @@ class BookController {
         body: { comment }
       } = req
       const user = await this.userService.findUserById(req.jwtPayload.userId)
-      if (user.books.some(book => book._id.toString() === bookId)) {
-        const book = await this.bookService.findBookById(bookId)
-        const result = await this.bookService.addCommentToBook(book, comment)
-        res.send({ success: result })
-      } else {
-        next(new Error('You are not allowed to add comment to this book'))
-      }
+      const book = await this.bookService.findBookById(bookId)
+      this.bookService.isBookBelongsToUser(book, user)
+      const result = await this.bookService.addCommentToBook(book, comment)
+      res.send({ success: result })
     } catch (error) {
       next(error)
     }
