@@ -6,6 +6,7 @@ import {
   IBookModel
 } from './book.interface'
 import { BookModel } from './book.model'
+import { Types } from 'mongoose'
 export default class BookService {
   private model: IBookModel
   constructor () {
@@ -14,11 +15,11 @@ export default class BookService {
   createBook = async (owner: IUserDocument, createBookDto: CreateBookDto) => {
     try {
       const book = new this.model({
-        title: createBookDto.title,
+        ...createBookDto,
         owner: owner._id
       })
       await book.save()
-      owner.books.push(book)
+      owner.books.push(book._id)
       await owner.save()
       return book
     } catch (error) {
@@ -46,7 +47,9 @@ export default class BookService {
   }
   populateUserBooks = async (user: IUserDocument) => {
     try {
-      const populatedUser = await user.populate('books')
+      const populatedUser = await user.populate<{ books: IBookDocument[] }>(
+        'books'
+      )
       return populatedUser
     } catch (error) {
       throw error
@@ -54,13 +57,17 @@ export default class BookService {
   }
   deleteBookById = async (user: IUserDocument, id: string) => {
     try {
+      const objectIdBookd = new Types.ObjectId(id)
       const books = await user.books.filter(book => book._id.toString() !== id)
       if (books.length === user.books.length) {
+      }
+      if (user.books.includes(objectIdBookd)) {
+        await this.model.findByIdAndDelete(id)
+        user.books = user.books.filter(bookId => bookId !== objectIdBookd)
+        await user.save()
+      } else {
         throw new Error('Book not found')
       }
-      await this.model.findByIdAndDelete(id)
-      user.books = books
-      await user.save()
       return true
     } catch (error) {
       throw error
@@ -80,4 +87,8 @@ export default class BookService {
       throw error
     }
   }
+  isBookBelongsToUser = (book: IBookDocument, user: IUserDocument) =>
+    book.owner.toString() === user._id.toString()
+      ? true
+      : new Error('Book not belongs to user')
 }

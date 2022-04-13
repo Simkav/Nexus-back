@@ -5,9 +5,10 @@ const BookSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: false, default: '' },
   owner: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-  comments: [{ text: { type: String }, _id: { type: Schema.Types.ObjectId } }]
+  comments: [{ text: { type: String }, _id: { type: Schema.Types.ObjectId } }],
+  quotes: [{ type: Schema.Types.ObjectId, ref: 'Quote', default: [] }]
 })
-//TODO add methods to work with comments
+
 BookSchema.method('addComment', async function (comment: string) {
   const book: IBookDocument = this
   const res = await book.update({
