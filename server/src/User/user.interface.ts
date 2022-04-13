@@ -1,11 +1,10 @@
 import { Model, Types, Document } from 'mongoose'
 import { Expose } from 'class-transformer'
 import { IsDefined, IsEmail } from 'class-validator'
-import { IBookDocument } from '../Book/book.interface'
 interface IUser {
   email: string
   password: string
-  books: IBookDocument[]
+  books: Types.ObjectId[] //IBookDocument
 }
 
 interface IUserDocument extends IUser, Document {
