@@ -12,7 +12,6 @@ export default class AuthService {
   login = async (email: string, password: string) => {
     try {
       const findedUser = await this.userService.findUserByEmail(email)
-      console.log(findedUser)
       const isPasswordValid = await findedUser.checkPassword(password)
       if (!isPasswordValid) {
         throw new WrongCredentialsError()
