@@ -5,26 +5,25 @@ import { Types, Document, Model } from 'mongoose'
 export interface IBook {
   title: string
   description?: string
-  owner: Types.ObjectId
+  owner: Types.ObjectId // IUserDocument
   comments: IBookComment[]
+  quotes: Types.ObjectId[] // IQuoteDocument
 }
 
-export class CreateBookDto implements Omit<IBook, 'comments' | 'owner'> {
+export class CreateBookDto implements Pick<IBook, 'title' | 'description'> {
   @Expose()
   @IsDefined()
   title: string
-
   @Expose()
   description?: string
 }
 
 export class UpdateBookDto
-  implements Partial<Omit<IBook, 'comment' | 'owner'>> {
+  implements Partial<Pick<IBook, 'title' | 'description'>> {
   @Expose()
   title?: string
   @Expose()
   description?: string
-
 }
 
 export class AddCommentDto {
