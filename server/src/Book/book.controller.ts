@@ -32,15 +32,18 @@ class BookController {
     }
   }
   updateBook = async (req: Request, res: Response, next: NextFunction) => {
-    const {
-      params: { bookId },
-      body
-    } = req
-    const user = await this.userService.findUserById(req.jwtPayload.userId)
-    const book = await this.bookService.findBookById(bookId)
-    this.bookService.isBookBelongsToUser(book, user)
-    const result = await this.bookService.updateBook(book, body)
-    res.send({ success: result })
+    try {
+      const {
+        params: { bookId },
+        body
+      } = req
+      const book = await this.bookService.findBookById(bookId)
+      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      const result = await this.bookService.updateBook(book, body)
+      res.send({ success: result })
+    } catch (error) {
+      next(error)
+    }
   }
   deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
