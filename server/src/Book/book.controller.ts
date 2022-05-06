@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
+import QuoteRouter from '../Quote/quote.controller'
 import UserService from '../User/user.service'
 import { CreateBookDto, AddCommentDto, UpdateBookDto } from './book.interface'
 import BookService from './book.service'
@@ -124,5 +125,7 @@ BookRouter.delete(
   parseJwt,
   bookController.removeCommentFromBookById
 )
+
+BookRouter.use(QuoteRouter)
 
 export default BookRouter
