@@ -87,8 +87,9 @@ export default class BookService {
       throw error
     }
   }
-  isBookBelongsToUser = (book: IBookDocument, user: IUserDocument) =>
-    book.owner.toString() === user._id.toString()
-      ? true
-      : new Error('Book not belongs to user')
+  isBookBelongsToUserId = (book: IBookDocument, userId: string) => {
+    if (book.owner.toString() !== userId)
+    // TODO custom error
+      throw new Error('Book not belongs to user')
+  }
 }
