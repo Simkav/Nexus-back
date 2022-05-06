@@ -63,9 +63,8 @@ class BookController {
   ) => {
     try {
       const { bookId, commentId } = req.params
-      const user = await this.userService.findUserById(req.jwtPayload.userId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUser(book, user)
+      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.removeCommentFromBookById(
         book,
         commentId
@@ -85,9 +84,8 @@ class BookController {
         params: { bookId },
         body: { comment }
       } = req
-      const user = await this.userService.findUserById(req.jwtPayload.userId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUser(book, user)
+      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.addCommentToBook(book, comment)
       res.send({ success: result })
     } catch (error) {
