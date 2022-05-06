@@ -1,13 +1,12 @@
 import { Schema, model } from 'mongoose'
-import IQuote from './quote.interface'
+import { IQuoteDocument } from './quote.interface'
 
-const QuoteSchema = new Schema<IQuote>({
-  comment: { type: String },
-  person: { type: String },
-  text: { type: String },
-  book: { type: Schema.Types.ObjectId, ref: 'Book' }
+const QuoteSchema = new Schema({
+  comment: { type: String, default: '' },
+  person: { type: String, default: '' },
+  text: { type: String, required: true }
 })
 
-const QuoteModel = model<IQuote>('Quote', QuoteSchema)
+const QuoteModel = model<IQuoteDocument>('Quote', QuoteSchema)
 
 export { QuoteSchema, QuoteModel }
