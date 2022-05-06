@@ -1,6 +1,6 @@
 import { connect } from 'mongoose'
 // TODO add parse models and import
-const arr = ['./Book/book.model', './User/user.model']
+const arr = ['./Book/book.model', './User/user.model', './Quote/quote.model']
 
 const init = async () => {
   try {
