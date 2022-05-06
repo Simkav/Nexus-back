@@ -6,10 +6,10 @@ const errorHandling = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(err)
   if (err instanceof CustomError) {
     res.status(400).send({ error: err.message })
   } else {
-    console.log(err)
     res.status(400).send({ error: 'Some error' })
   }
 }

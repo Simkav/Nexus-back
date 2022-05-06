@@ -23,7 +23,6 @@ class AuthController {
       const result = await this.authService.register({ email, password })
       res.send(result)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
