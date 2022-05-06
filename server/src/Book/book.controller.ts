@@ -52,7 +52,6 @@ class BookController {
       const result = await this.bookService.deleteBookById(user, bookId)
       res.send({ success: result })
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
