@@ -1,6 +1,7 @@
 import { IsDefined, IsString } from 'class-validator'
 import { Expose } from 'class-transformer'
 import { Types, Document, Model } from 'mongoose'
+import { IQuoteDocument } from '../Quote/quote.interface'
 
 export interface IBook {
   title: string
@@ -8,6 +9,9 @@ export interface IBook {
   owner: Types.ObjectId // IUserDocument
   comments: IBookComment[]
   quotes: Types.ObjectId[] // IQuoteDocument
+}
+export interface IPopulatedBookDocument extends Omit<IBookDocument, 'quotes'> {
+  quotes: IQuoteDocument[]
 }
 
 export class CreateBookDto implements Pick<IBook, 'title' | 'description'> {
