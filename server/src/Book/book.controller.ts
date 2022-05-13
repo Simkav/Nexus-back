@@ -2,16 +2,16 @@ import { NextFunction, Response, Request, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import QuoteRouter from '../Quote/quote.controller'
-import UserService from '../User/user.service'
+import userService, { UserService } from '../User/user.service'
 import { CreateBookDto, AddCommentDto, UpdateBookDto } from './book.interface'
-import BookService from './book.service'
+import bookService, { BookService } from './book.service'
 
 class BookController {
   private bookService: BookService
   private userService: UserService
   constructor () {
-    this.bookService = new BookService()
-    this.userService = new UserService()
+    this.bookService = bookService
+    this.userService = userService
   }
   createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {

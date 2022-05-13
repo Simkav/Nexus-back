@@ -7,7 +7,8 @@ import {
   UpdateQuoteDto
 } from './quote.interface'
 import { QuoteModel } from './quote.model'
-export default class QuoteService {
+// TODO add interfaces for services and controllers
+export class QuoteService {
   private model: IQuouteModel
   constructor () {
     this.model = QuoteModel
@@ -65,3 +66,6 @@ export default class QuoteService {
     }
   }
 }
+
+const quoteService = new QuoteService()
+export default quoteService

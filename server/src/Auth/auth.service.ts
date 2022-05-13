@@ -1,13 +1,13 @@
 import { CreateUserDto } from '../User/user.interface'
-import UserService from '../User/user.service'
+import userService, { UserService } from '../User/user.service'
 import WrongCredentialsError from './errors/wrongCredentialsError'
-import JwtService from '../Jwt/jwt.service'
-export default class AuthService {
+import jwtService, { JwtService } from '../Jwt/jwt.service'
+export class AuthService {
   private userService: UserService
   private jwtService: JwtService
   constructor () {
-    this.userService = new UserService()
-    this.jwtService = new JwtService()
+    this.userService = userService
+    this.jwtService = jwtService
   }
   login = async (email: string, password: string) => {
     try {
@@ -41,3 +41,6 @@ export default class AuthService {
     }
   }
 }
+
+const authService = new AuthService()
+export default authService

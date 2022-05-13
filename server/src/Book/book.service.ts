@@ -9,7 +9,7 @@ import BookNotBelongsToUser from './errors/bookNotBelongsToUser'
 import BookNotFound from './errors/bookNotFound'
 import { BookModel } from './book.model'
 import { Types } from 'mongoose'
-export default class BookService {
+export class BookService {
   private model: IBookModel
   constructor () {
     this.model = BookModel
@@ -85,3 +85,6 @@ export default class BookService {
     if (book.owner.toString() !== userId) throw new BookNotBelongsToUser()
   }
 }
+
+const bookService = new BookService()
+export default bookService

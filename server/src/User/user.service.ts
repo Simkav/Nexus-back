@@ -2,7 +2,7 @@ import UserAlreadyExistsError from './errors/userAlreadyExists'
 import UserNotFound from './errors/userNotFound'
 import { CreateUserDto, IUserModel } from './user.interface'
 import { UserModel } from './user.model'
-export default class UserService {
+export class UserService {
   model: IUserModel
   constructor () {
     this.model = UserModel
@@ -42,3 +42,6 @@ export default class UserService {
     }
   }
 }
+
+const userService = new UserService()
+export default userService
