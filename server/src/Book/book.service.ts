@@ -57,17 +57,11 @@ export default class BookService {
   }
   deleteBookById = async (user: IUserDocument, id: string) => {
     try {
-      const objectIdBookd = new Types.ObjectId(id)
-      const books = await user.books.filter(book => book._id.toString() !== id)
-      if (books.length === user.books.length) {
-      }
-      if (user.books.includes(objectIdBookd)) {
-        await this.model.findByIdAndDelete(id)
-        user.books = user.books.filter(bookId => bookId !== objectIdBookd)
-        await user.save()
-      } else {
-        throw new Error('Book not found')
-      }
+      const bookId = new Types.ObjectId(id)
+      if (!user.books.includes(bookId)) throw new BookNotFound()
+      await this.model.findByIdAndDelete(id)
+      user.books = user.books.filter(book => book !== bookId)
+      await user.save()
       return true
     } catch (error) {
       throw error
