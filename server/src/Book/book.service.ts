@@ -5,6 +5,8 @@ import {
   IBookDocument,
   IBookModel
 } from './book.interface'
+import BookNotBelongsToUser from './errors/bookNotBelongsToUser'
+import BookNotFound from './errors/bookNotFound'
 import { BookModel } from './book.model'
 import { Types } from 'mongoose'
 export default class BookService {
@@ -29,9 +31,7 @@ export default class BookService {
   findBookById = async (id: string) => {
     try {
       const book = await this.model.findById(id)
-      if (!book) {
-        throw new Error('Book not found')
-      }
+      if (!book) throw new BookNotFound()
       return book
     } catch (error) {
       throw error
@@ -87,9 +87,7 @@ export default class BookService {
       throw error
     }
   }
-  isBookBelongsToUserId = (book: IBookDocument, userId: string) => {
-    if (book.owner.toString() !== userId)
-    // TODO custom error
-      throw new Error('Book not belongs to user')
+  checkIsBookBelongsToUserId = (book: IBookDocument, userId: string) => {
+    if (book.owner.toString() !== userId) throw new BookNotBelongsToUser()
   }
 }

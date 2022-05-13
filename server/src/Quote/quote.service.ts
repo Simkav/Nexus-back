@@ -1,4 +1,5 @@
 import { IBookDocument, IPopulatedBookDocument } from './../Book/book.interface'
+import QuoteNotFound from './errors/quoteNotFound'
 import {
   IQuouteModel,
   CreateQuoteDto,
@@ -37,9 +38,7 @@ export default class QuoteService {
   findQuoteById = async (id: string): Promise<IQuoteDocument> => {
     try {
       const quote = await this.model.findById(id)
-      if (!quote) {
-        throw new Error('Quote not found')
-      }
+      if (!quote) throw new QuoteNotFound()
       return quote
     } catch (error) {
       throw error
