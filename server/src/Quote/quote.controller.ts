@@ -19,7 +19,7 @@ class QuoteController {
         body
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const quote = await this.quoteService.addQuote(body, book)
       res.send({ quote })
     } catch (error) {
@@ -32,7 +32,7 @@ class QuoteController {
         params: { bookId }
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const { quotes } = await this.quoteService.populateBookQuotes(book)
       res.send({ quotes })
     } catch (error) {
@@ -46,7 +46,7 @@ class QuoteController {
       } = req
       const quote = await this.quoteService.findQuoteById(quoteId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.quoteService.deleteQuote(book, quote)
       res.send({ success: result })
     } catch (error) {
@@ -61,7 +61,7 @@ class QuoteController {
       } = req
       const quote = await this.quoteService.findQuoteById(quoteId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.quoteService.editQuote(quote, body)
       res.send({ success: result })
     } catch (error) {

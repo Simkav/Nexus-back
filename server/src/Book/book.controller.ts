@@ -39,7 +39,7 @@ class BookController {
         body
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.updateBook(book, body)
       res.send({ success: result })
     } catch (error) {
@@ -64,7 +64,7 @@ class BookController {
     try {
       const { bookId, commentId } = req.params
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.removeCommentFromBookById(
         book,
         commentId
@@ -85,7 +85,7 @@ class BookController {
         body: { comment }
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.addCommentToBook(book, comment)
       res.send({ success: result })
     } catch (error) {
