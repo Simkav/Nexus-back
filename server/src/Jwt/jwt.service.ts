@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
+import SchemaMustBeABearer from './errors/schmaMustBeABearer'
+import TokenNotProvided from './errors/tokenNotProvided'
 
-export default class JwtService {
+export class JwtService {
   private secret: string
   constructor () {
     this.secret = process.env.JWT_SECRET
@@ -10,6 +12,21 @@ export default class JwtService {
     return jwt.sign(payload, this.secret)
   }
   verify = (token: string) => {
-    return jwt.verify(token, this.secret)
+    const payload = jwt.verify(token, this.secret)
+    if (typeof payload === 'string') throw new Error()
+    return payload
+  }
+  parseAuthorizationHeader = (authorizationHeader: string) => {
+    const [Bearer, token] = authorizationHeader.split(' ')
+    if (!token) {
+      throw new TokenNotProvided()
+    }
+    if (Bearer && Bearer !== 'Bearer') {
+      throw new SchemaMustBeABearer()
+    }
+    return token
   }
 }
+
+const jwtService = new JwtService()
+export default jwtService
