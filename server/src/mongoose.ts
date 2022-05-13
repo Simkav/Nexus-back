@@ -1,12 +1,12 @@
 import { connect } from 'mongoose'
-// TODO add parse models and import
-const arr = ['./Book/book.model', './User/user.model', './Quote/quote.model']
+import parseModels from './utils/parseModels'
 
 const init = async () => {
   try {
+    console.log('connecting to mongo')
     await connect(process.env.MONGO_CONNECT_URL)
-    await Promise.all(arr.map(module => import(module)))
-    console.log('Mongoose connected')
+    await parseModels()
+    console.log('Mongo connected')
   } catch (error) {
     console.error(error)
     throw new Error()
