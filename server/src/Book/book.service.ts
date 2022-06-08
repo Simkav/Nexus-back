@@ -81,6 +81,13 @@ export class BookService {
       throw error
     }
   }
+  updateComment = async (
+    book: IBookDocument,
+    id: string,
+    newComment: string
+  ) => {
+    return await book.updateComment(id, newComment)
+  }
   checkIsBookBelongsToUserId = (book: IBookDocument, userId: string) => {
     if (book.owner.toString() !== userId) throw new BookNotBelongsToUser()
   }
