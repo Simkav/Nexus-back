@@ -2,7 +2,7 @@ import { NextFunction, Response, Request, Router } from 'express'
 import bookService, { BookService } from '../Book/book.service'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
-import { CreateQuoteDto } from './quote.interface'
+import { CreateQuoteDto, UpdateQuoteDto } from './quote.interface'
 import quoteService, { QuoteService } from './quote.service'
 
 class QuoteController {
@@ -63,7 +63,8 @@ class QuoteController {
       const book = await this.bookService.findBookById(bookId)
       this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.quoteService.editQuote(quote, body)
-      res.send({ success: result })
+      const updatedQuote = await this.quoteService.findQuoteById(quote.id)
+      res.send({ success: result, quote: updatedQuote })
     } catch (error) {
       next(error)
     }
