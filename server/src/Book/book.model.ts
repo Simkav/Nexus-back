@@ -26,6 +26,18 @@ BookSchema.method('deleteComment', async function (commentId: string) {
   return Boolean(res.modifiedCount)
 })
 
+BookSchema.method('updateComment', async function (commentId, newComment) {
+  const book: IBookDocument = this
+  const res = await book.update({
+    $set: {
+      'comments.$[comment].text': newComment,
+    }
+  }, {
+    arrayFilters: [{ 'comment._id': commentId }]
+  })
+  return Boolean(res.modifiedCount)
+})
+
 const BookModel = model<IBookDocument>('Book', BookSchema)
 
 export { BookSchema, BookModel }
