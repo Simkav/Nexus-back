@@ -75,10 +75,8 @@ const quoteController = new QuoteController()
 QuoteRouter.route('/:bookId/quote')
   .post(validationMw(CreateQuoteDto), parseJwt, quoteController.addQuote)
   .get(parseJwt, quoteController.getQuotes)
-QuoteRouter.delete(
-  '/:bookId/quote/:quoteId',
-  parseJwt,
-  quoteController.deleteQuote
-)
+QuoteRouter.route('/:bookId/quote/:quoteId')
+  .delete(parseJwt, quoteController.deleteQuote)
+  .post(validationMw(UpdateQuoteDto), parseJwt, quoteController.updateQuote)
 
 export default QuoteRouter
