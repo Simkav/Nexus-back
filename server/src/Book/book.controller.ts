@@ -2,6 +2,7 @@ import { NextFunction, Response, Request, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import QuoteRouter from '../Quote/quote.controller'
+
 import userService, { UserService } from '../User/user.service'
 import {
   CreateBookDto,
@@ -147,6 +148,8 @@ BookRouter.post(
 BookRouter.route('/:bookId/comment/:commentId')
   .delete(parseJwt, bookController.removeCommentFromBookById)
   .patch(validationMw(UpdateCommentDto), parseJwt, bookController.updateComment)
+
+BookRouter.use(QuoteRouter)
 
 BookRouter.use(QuoteRouter)
 
