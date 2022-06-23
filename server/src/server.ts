@@ -1,10 +1,28 @@
 import express from 'express'
 import errorHandling from './errorHandling'
 import Router from './router'
+import cors from 'cors'
 const server = express()
 server.use(express.json())
 
-server.use('/api',Router)
+const whitelist = ['https://nexus-sim.pp.ua', 'http://localhost']
+server.use(
+  cors({
+    origin (requestOrigin, callback) {
+      if (typeof requestOrigin !== 'string') {
+        callback(new Error('Not allowed by CORS'))
+        return
+      }
+      if (whitelist.indexOf(requestOrigin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+  })
+)
+
+server.use('/api', Router)
 
 server.use(errorHandling)
 
