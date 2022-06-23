@@ -16,6 +16,7 @@ services:
       - ../server:/home/node/app
     working_dir: /home/node/app
     restart: unless-stopped
-    command: npm run start:dev
     networks:
       - shared
+    command: sh -c "npm ci && npm run start:dev"
+
