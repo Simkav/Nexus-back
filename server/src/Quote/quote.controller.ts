@@ -1,16 +1,16 @@
 import { NextFunction, Response, Request, Router } from 'express'
-import BookService from '../Book/book.service'
+import bookService, { BookService } from '../Book/book.service'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
-import { CreateQuoteDto } from './quote.interface'
-import QuoteService from './quote.service'
+import { CreateQuoteDto, UpdateQuoteDto } from './quote.interface'
+import quoteService, { QuoteService } from './quote.service'
 
 class QuoteController {
   private quoteService: QuoteService
   private bookService: BookService
   constructor () {
-    this.bookService = new BookService()
-    this.quoteService = new QuoteService()
+    this.bookService = bookService
+    this.quoteService = quoteService
   }
   addQuote = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -19,7 +19,7 @@ class QuoteController {
         body
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const quote = await this.quoteService.addQuote(body, book)
       res.send({ quote })
     } catch (error) {
@@ -32,7 +32,7 @@ class QuoteController {
         params: { bookId }
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const { quotes } = await this.quoteService.populateBookQuotes(book)
       res.send({ quotes })
     } catch (error) {
@@ -46,7 +46,7 @@ class QuoteController {
       } = req
       const quote = await this.quoteService.findQuoteById(quoteId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.quoteService.deleteQuote(book, quote)
       res.send({ success: result })
     } catch (error) {
@@ -61,9 +61,10 @@ class QuoteController {
       } = req
       const quote = await this.quoteService.findQuoteById(quoteId)
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.quoteService.editQuote(quote, body)
-      res.send({ success: result })
+      const updatedQuote = await this.quoteService.findQuoteById(quote.id)
+      res.send({ success: result, quote: updatedQuote })
     } catch (error) {
       next(error)
     }
@@ -75,10 +76,8 @@ const quoteController = new QuoteController()
 QuoteRouter.route('/:bookId/quote')
   .post(validationMw(CreateQuoteDto), parseJwt, quoteController.addQuote)
   .get(parseJwt, quoteController.getQuotes)
-QuoteRouter.delete(
-  '/:bookId/quote/:quoteId',
-  parseJwt,
-  quoteController.deleteQuote
-)
+QuoteRouter.route('/:bookId/quote/:quoteId')
+  .delete(parseJwt, quoteController.deleteQuote)
+  .post(validationMw(UpdateQuoteDto), parseJwt, quoteController.updateQuote)
 
 export default QuoteRouter

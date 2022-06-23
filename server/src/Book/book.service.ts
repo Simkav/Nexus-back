@@ -5,9 +5,11 @@ import {
   IBookDocument,
   IBookModel
 } from './book.interface'
+import BookNotBelongsToUser from './errors/bookNotBelongsToUser'
+import BookNotFound from './errors/bookNotFound'
 import { BookModel } from './book.model'
 import { Types } from 'mongoose'
-export default class BookService {
+export class BookService {
   private model: IBookModel
   constructor () {
     this.model = BookModel
@@ -29,9 +31,7 @@ export default class BookService {
   findBookById = async (id: string) => {
     try {
       const book = await this.model.findById(id)
-      if (!book) {
-        throw new Error('Book not found')
-      }
+      if (!book) throw new BookNotFound()
       return book
     } catch (error) {
       throw error
@@ -57,17 +57,11 @@ export default class BookService {
   }
   deleteBookById = async (user: IUserDocument, id: string) => {
     try {
-      const objectIdBookd = new Types.ObjectId(id)
-      const books = await user.books.filter(book => book._id.toString() !== id)
-      if (books.length === user.books.length) {
-      }
-      if (user.books.includes(objectIdBookd)) {
-        await this.model.findByIdAndDelete(id)
-        user.books = user.books.filter(bookId => bookId !== objectIdBookd)
-        await user.save()
-      } else {
-        throw new Error('Book not found')
-      }
+      const bookId = new Types.ObjectId(id)
+      if (!user.books.includes(bookId)) throw new BookNotFound()
+      await this.model.findByIdAndDelete(id)
+      user.books = user.books.filter(book => book !== bookId)
+      await user.save()
       return true
     } catch (error) {
       throw error
@@ -87,9 +81,17 @@ export default class BookService {
       throw error
     }
   }
-  isBookBelongsToUserId = (book: IBookDocument, userId: string) => {
-    if (book.owner.toString() !== userId)
-    // TODO custom error
-      throw new Error('Book not belongs to user')
+  updateComment = async (
+    book: IBookDocument,
+    id: string,
+    newComment: string
+  ) => {
+    return await book.updateComment(id, newComment)
+  }
+  checkIsBookBelongsToUserId = (book: IBookDocument, userId: string) => {
+    if (book.owner.toString() !== userId) throw new BookNotBelongsToUser()
   }
 }
+
+const bookService = new BookService()
+export default bookService

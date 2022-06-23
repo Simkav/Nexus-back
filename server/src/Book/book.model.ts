@@ -11,16 +11,29 @@ const BookSchema = new Schema({
 
 BookSchema.method('addComment', async function (comment: string) {
   const book: IBookDocument = this
+  const _id = new Types.ObjectId()
   const res = await book.update({
-    $push: { comments: { text: comment, _id: new Types.ObjectId() } }
+    $push: { comments: { text: comment, _id } }
   })
-  return Boolean(res.modifiedCount)
+  return { result: Boolean(res.modifiedCount), _id }
 })
 
 BookSchema.method('deleteComment', async function (commentId: string) {
   const book: IBookDocument = this
   const res = await book.update({
     $pull: { comments: { _id: commentId } }
+  })
+  return Boolean(res.modifiedCount)
+})
+
+BookSchema.method('updateComment', async function (commentId, newComment) {
+  const book: IBookDocument = this
+  const res = await book.update({
+    $set: {
+      'comments.$[comment].text': newComment,
+    }
+  }, {
+    arrayFilters: [{ 'comment._id': commentId }]
   })
   return Boolean(res.modifiedCount)
 })

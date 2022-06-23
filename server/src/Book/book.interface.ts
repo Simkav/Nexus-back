@@ -37,9 +37,12 @@ export class AddCommentDto {
   comment: string
 }
 
+export class UpdateCommentDto extends AddCommentDto {}
+
 export interface IBookDocument extends IBook, Document {
   addComment: (comment: string) => Promise<boolean>
   deleteComment: (commentId: string) => Promise<boolean>
+  updateComment: (commentId: string, newComment: string) => Promise<boolean>
 }
 
 export interface IBookModel extends Model<IBookDocument> {}

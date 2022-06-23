@@ -2,16 +2,22 @@ import { NextFunction, Response, Request, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import QuoteRouter from '../Quote/quote.controller'
-import UserService from '../User/user.service'
-import { CreateBookDto, AddCommentDto, UpdateBookDto } from './book.interface'
-import BookService from './book.service'
+
+import userService, { UserService } from '../User/user.service'
+import {
+  CreateBookDto,
+  AddCommentDto,
+  UpdateBookDto,
+  UpdateCommentDto
+} from './book.interface'
+import bookService, { BookService } from './book.service'
 
 class BookController {
   private bookService: BookService
   private userService: UserService
   constructor () {
-    this.bookService = new BookService()
-    this.userService = new UserService()
+    this.bookService = bookService
+    this.userService = userService
   }
   createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -39,9 +45,10 @@ class BookController {
         body
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.updateBook(book, body)
-      res.send({ success: result })
+      const updatedbook = await this.bookService.findBookById(book.id)
+      res.send({ success: result, book: updatedbook })
     } catch (error) {
       next(error)
     }
@@ -64,10 +71,28 @@ class BookController {
     try {
       const { bookId, commentId } = req.params
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.removeCommentFromBookById(
         book,
         commentId
+      )
+      res.send({ success: result })
+    } catch (error) {
+      next(error)
+    }
+  }
+  updateComment = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {
+        params: { bookId, commentId },
+        body: { comment }
+      } = req
+      const book = await this.bookService.findBookById(bookId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
+      const result = await this.bookService.updateComment(
+        book,
+        commentId,
+        comment
       )
       res.send({ success: result })
     } catch (error) {
@@ -85,7 +110,7 @@ class BookController {
         body: { comment }
       } = req
       const book = await this.bookService.findBookById(bookId)
-      this.bookService.isBookBelongsToUserId(book, req.jwtPayload.userId)
+      this.bookService.checkIsBookBelongsToUserId(book, req.jwtPayload.userId)
       const result = await this.bookService.addCommentToBook(book, comment)
       res.send({ success: result })
     } catch (error) {
@@ -120,11 +145,11 @@ BookRouter.post(
   parseJwt,
   bookController.addCommentToBook
 )
-BookRouter.delete(
-  '/:bookId/comment/:commentId',
-  parseJwt,
-  bookController.removeCommentFromBookById
-)
+BookRouter.route('/:bookId/comment/:commentId')
+  .delete(parseJwt, bookController.removeCommentFromBookById)
+  .patch(validationMw(UpdateCommentDto), parseJwt, bookController.updateComment)
+
+BookRouter.use(QuoteRouter)
 
 BookRouter.use(QuoteRouter)
 

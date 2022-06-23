@@ -2,11 +2,11 @@ import { Request, Response, NextFunction, Router } from 'express'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
 import { CreateUserDto, CredentialsUserDto } from '../User/user.interface'
-import AuthService from './auth.service'
+import authService, { AuthService } from './auth.service'
 class AuthController {
   private authService: AuthService
   constructor () {
-    this.authService = new AuthService()
+    this.authService = authService
   }
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
