@@ -152,4 +152,6 @@ BookRouter.route('/:bookId/comment/:commentId')
 
 BookRouter.use(QuoteRouter)
 
+BookRouter.use(QuoteRouter)
+
 export default BookRouter
