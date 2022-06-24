@@ -4,15 +4,17 @@ import TokenNotProvided from './errors/tokenNotProvided'
 
 export class JwtService {
   private secret: string
+  private jwt: typeof jwt
   constructor () {
+    this.jwt = jwt
     this.secret = process.env.JWT_SECRET
   }
   //   TOOD async methods
   sign = (payload: any) => {
-    return jwt.sign(payload, this.secret)
+    return this.jwt.sign(payload, this.secret)
   }
   verify = (token: string) => {
-    const payload = jwt.verify(token, this.secret)
+    const payload = this.jwt.verify(token, this.secret)
     if (typeof payload === 'string') throw new Error()
     return payload
   }

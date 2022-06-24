@@ -1,8 +1,8 @@
 import UserAlreadyExistsError from './errors/userAlreadyExists'
 import UserNotFound from './errors/userNotFound'
-import { CreateUserDto, IUserModel } from './user.interface'
+import { CreateUserDto, IUserModel, IUserService } from './user.interface'
 import { UserModel } from './user.model'
-export class UserService {
+class UserService implements IUserService {
   model: IUserModel
   constructor () {
     this.model = UserModel

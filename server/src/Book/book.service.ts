@@ -3,13 +3,14 @@ import {
   CreateBookDto,
   UpdateBookDto,
   IBookDocument,
-  IBookModel
+  IBookModel,
+  IBookService
 } from './book.interface'
 import BookNotBelongsToUser from './errors/bookNotBelongsToUser'
 import BookNotFound from './errors/bookNotFound'
 import { BookModel } from './book.model'
 import { Types } from 'mongoose'
-export class BookService {
+class BookService implements IBookService {
   private model: IBookModel
   constructor () {
     this.model = BookModel

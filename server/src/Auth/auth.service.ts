@@ -1,9 +1,9 @@
-import { CreateUserDto } from '../User/user.interface'
-import userService, { UserService } from '../User/user.service'
+import { CreateUserDto, IUserService } from '../User/user.interface'
+import userService from '../User/user.service'
 import WrongCredentialsError from './errors/wrongCredentialsError'
 import jwtService, { JwtService } from '../Jwt/jwt.service'
 export class AuthService {
-  private userService: UserService
+  private userService: IUserService
   private jwtService: JwtService
   constructor () {
     this.userService = userService
@@ -13,9 +13,7 @@ export class AuthService {
     try {
       const findedUser = await this.userService.findUserByEmail(email)
       const isPasswordValid = await findedUser.checkPassword(password)
-      if (!isPasswordValid) {
-        throw new WrongCredentialsError()
-      }
+      if (!isPasswordValid) throw new WrongCredentialsError()
       const { password: _, ...user } = findedUser.toObject()
       return { user, token: this.jwtService.sign({ userId: findedUser._id }) }
     } catch (error) {
