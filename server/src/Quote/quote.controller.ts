@@ -1,13 +1,18 @@
 import { NextFunction, Response, Request, Router } from 'express'
-import bookService, { BookService } from '../Book/book.service'
+import { IBookService } from '../Book/book.interface'
+import bookService from '../Book/book.service'
 import parseJwt from '../middlewares/parseJwt.mv'
 import validationMw from '../middlewares/validaton.mv'
-import { CreateQuoteDto, UpdateQuoteDto } from './quote.interface'
-import quoteService, { QuoteService } from './quote.service'
+import {
+  CreateQuoteDto,
+  IQuoteService,
+  UpdateQuoteDto
+} from './quote.interface'
+import quoteService from './quote.service'
 
 class QuoteController {
-  private quoteService: QuoteService
-  private bookService: BookService
+  private quoteService: IQuoteService
+  private bookService: IBookService
   constructor () {
     this.bookService = bookService
     this.quoteService = quoteService

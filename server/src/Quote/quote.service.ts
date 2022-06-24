@@ -4,11 +4,12 @@ import {
   IQuouteModel,
   CreateQuoteDto,
   IQuoteDocument,
-  UpdateQuoteDto
+  UpdateQuoteDto,
+  IQuoteService
 } from './quote.interface'
 import { QuoteModel } from './quote.model'
 // TODO add interfaces for services and controllers
-export class QuoteService {
+export class QuoteService implements IQuoteService {
   private model: IQuouteModel
   constructor () {
     this.model = QuoteModel

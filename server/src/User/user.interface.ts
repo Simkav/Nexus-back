@@ -23,6 +23,12 @@ class CreateUserDto implements Omit<IUser, 'books'> {
   password: string
 }
 
+export interface IUserService {
+  createUser(userCreateDto: CreateUserDto): Promise<IUserDocument>
+  findUserById(id: string): Promise<IUserDocument>
+  findUserByEmail(email: string): Promise<IUserDocument>
+}
+
 class CredentialsUserDto extends CreateUserDto {}
 
 export { CreateUserDto, IUser, IUserModel, IUserDocument, CredentialsUserDto }
