@@ -22,9 +22,8 @@ class BookController {
   }
   createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title } = req.body
       const user = await this.userService.findUserById(req.jwtPayload.userId)
-      const createdBook = await this.bookService.createBook(user, { title })
+      const createdBook = await this.bookService.createBook(user, req.body)
       res.send({ createdBook })
     } catch (error) {
       next(error)
